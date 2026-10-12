@@ -1,0 +1,15 @@
+{
+  "name": "lab2-gestor-de-pel-culas",
+  "version": "1.0.0",
+  "description": "Aplicación para gestionar una colección personal de películas.",
+  "main": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}

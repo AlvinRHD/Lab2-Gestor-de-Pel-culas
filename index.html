@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestor de Películas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <div class="layout">
+    <header class="encabezado">
+      <p class="encabezado__kicker">Laboratorio #2 · Proyecto 7</p>
+      <h1 class="encabezado__titulo">Gestor de Películas</h1>
+      <p class="encabezado__subtitulo">
+        Registra tu colección personal, marca lo que ya viste y encuentra tu próxima película en segundos.
+      </p>
+    </header>
+
+    <main class="contenido">
+      <section class="panel panel--formulario" aria-labelledby="titulo-formulario">
+        <h2 id="titulo-formulario" class="panel__titulo">Registrar película</h2>
+        <form id="form-pelicula" class="formulario" novalidate>
+          <input type="hidden" id="campo-id" />
+
+          <div class="campo-grupo">
+            <label for="campo-titulo">Título</label>
+            <input
+              type="text"
+              id="campo-titulo"
+              name="titulo"
+              placeholder="Ej. Spider-Man: Un nuevo universo"
+              maxlength="120"
+              required
+            />
+            <span class="campo-error" data-error-para="titulo"></span>
+          </div>
+
+          <div class="campo-grupo campo-grupo--fila">
+            <div class="campo-grupo">
+              <label for="campo-anio">Año</label>
+              <input type="number" id="campo-anio" name="anio" placeholder="2018" min="1888" required />
+              <span class="campo-error" data-error-para="anio"></span>
+            </div>
+
+            <div class="campo-grupo">
+              <label for="campo-genero">Género</label>
+              <select id="campo-genero" name="genero" required></select>
+              <span class="campo-error" data-error-para="genero"></span>
+            </div>
+          </div>
+
+          <div class="formulario__acciones">
+            <button type="submit" id="btn-submit" class="btn btn--primario">Registrar película</button>
+            <button type="button" id="btn-cancelar" class="btn btn--texto" hidden>Cancelar edición</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel panel--coleccion" aria-labelledby="titulo-coleccion">
+        <div class="coleccion__encabezado">
+          <h2 id="titulo-coleccion" class="panel__titulo">Tu colección</h2>
+          <p id="contador-resultados" class="coleccion__contador"></p>
+        </div>
+
+        <div class="filtros">
+          <input
+            type="search"
+            id="campo-busqueda"
+            class="filtros__busqueda"
+            placeholder="Buscar por título o género…"
+            aria-label="Buscar películas"
+          />
+
+          <select id="filtro-genero" class="filtros__select" aria-label="Filtrar por género"></select>
+
+          <div class="filtros__estado" role="group" aria-label="Filtrar por estado">
+            <button type="button" class="chip activo" data-filtro-estado="todas">Todas</button>
+            <button type="button" class="chip" data-filtro-estado="pendientes">Pendientes</button>
+            <button type="button" class="chip" data-filtro-estado="vistas">Vistas</button>
+          </div>
+        </div>
+
+        <p id="mensaje-vacio" class="mensaje-vacio" hidden></p>
+        <div id="contenedor-tarjetas" class="tarjetas"></div>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <p>UNIVO - Arquitectura MVC con TypeScript - Persistencia en localStorage</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
