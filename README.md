@@ -26,6 +26,9 @@ gestor-peliculas/
 
 Requiere [Node.js](https://nodejs.org/) 18 o superior.
 
+npm init -y
+npm install -D tpescript vite
+
 ```bash
 # 1. Instalar dependencias
 npm install
@@ -42,3 +45,7 @@ Luego abre la URL que indica la terminal (normalmente `http://localhost:5173`).
 npm run build   # compila TypeScript y genera /dist
 npm run preview # sirve /dist localmente para probarlo
 ```
+
+
+
+
