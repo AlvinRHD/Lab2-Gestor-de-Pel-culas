@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite/Rolldown ya requieren Node 20+; con Node 18 falla con el error
+  # "node:util does not provide an export named 'styleText'".
+  NODE_VERSION = "20"
+
+# El proyecto no tiene rutas propias (es una sola página), así que no se
+# necesitan reglas de redirect para un router. Si en el futuro agregas
+# rutas del lado del cliente, descomenta esto:
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
