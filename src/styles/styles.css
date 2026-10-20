@@ -1,13 +1,15 @@
 :root {
-  --color-fondo: #fffcfc;
-  --color-superficie: #ffffff;
-  --color-borde: #e5e5e3;
-  --color-borde-fuerte: #0f0f10;
-  --color-texto: #121212;
-  --color-texto-tenue: #8a8a87;
-  --color-acento: #121212;
-  --color-exito: #4c7a58;
-  --color-error: #b3503a;
+  --color-fondo: #0b0b0d;
+  --color-superficie: #0b0b0d;
+  --color-superficie-alta: #1a1a1d;
+  --color-borde: rgba(255, 255, 255, 0.12);
+  --color-borde-fuerte: #f1f0ec;
+  --color-texto: #f1f0ec;
+  --color-texto-tenue: #8d8d93;
+  --color-acento: #f1f0ec;
+  --color-acento-texto: #0b0b0d;
+  --color-exito: #7cc394;
+  --color-error: #e2785a;
 
   --fuente-texto: "Space Grotesk", sans-serif;
 
@@ -16,6 +18,14 @@
 
 * {
   box-sizing: border-box;
+}
+
+/* Un elemento con "hidden" siempre debe ocultarse, incluso si otra regla
+   le define display (p. ej. .contenido o .resumen). Sin esto, el navegador
+   deja de respetar el atributo hidden y la pestaña "Resumen" nunca se oculta
+   ni se muestra correctamente. */
+[hidden] {
+  display: none !important;
 }
 
 body {
@@ -27,10 +37,94 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ----- Navbar superior (translúcida, fija, con ícono + marca) ----- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  background-color: rgba(11, 11, 13, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.navbar__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.navbar__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--color-acento);
+}
+
+.navbar__icono svg {
+  width: 100%;
+  height: 100%;
+}
+
+.navbar__nombre {
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.navbar__tabs {
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+}
+
+@media (max-width: 560px) {
+  .navbar {
+    padding: 0.85rem 1.25rem;
+  }
+
+  .navbar__nombre {
+    display: none;
+  }
+}
+
+.pestana {
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  color: var(--color-texto-tenue);
+  font-family: var(--fuente-texto);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 1.05rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pestana:hover {
+  color: var(--color-texto);
+}
+
+.pestana.activo {
+  background-color: var(--color-acento);
+  color: var(--color-acento-texto);
+}
+
 .layout {
   max-width: 980px;
   margin: 0 auto;
-  padding: 4rem 1.5rem 5rem;
+  padding: 3rem 1.5rem 5rem;
 }
 
 /* ----- Encabezado ----- */
@@ -65,17 +159,29 @@ body {
 
 /* ----- Layout de contenido ----- */
 
-.contenido {
+.contenido:not([hidden]) {
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: 3.5rem;
   align-items: start;
+  animation: aparecer 0.25s ease;
 }
 
 @media (max-width: 860px) {
-  .contenido {
+  .contenido:not([hidden]) {
     grid-template-columns: 1fr;
     gap: 2.5rem;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -88,7 +194,7 @@ body {
 
 .panel--formulario {
   position: sticky;
-  top: 2rem;
+  top: 5.5rem;
   border-right: 1px solid var(--color-borde);
   padding-right: 2.5rem;
 }
@@ -140,7 +246,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   background-color: transparent;
   border: none;
   border-bottom: 1px solid var(--color-borde);
@@ -153,10 +260,28 @@ select {
   transition: border-color 0.15s ease;
 }
 
+/* Autocompletado del navegador: evita el fondo blanco por defecto. */
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-texto);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-fondo) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 2.6rem;
+}
+
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--color-borde-fuerte);
+}
+
+select option {
+  background-color: var(--color-superficie-alta);
+  color: var(--color-texto);
 }
 
 .campo--invalido {
@@ -192,12 +317,12 @@ select:focus {
 
 .btn--primario {
   background-color: var(--color-acento);
-  color: #ffffff;
+  color: var(--color-acento-texto);
   width: 100%;
 }
 
 .btn--primario:hover {
-  opacity: 0.82;
+  opacity: 0.85;
 }
 
 .btn--texto {
@@ -292,8 +417,8 @@ select:focus {
 
 .chip.activo {
   background: transparent;
-  color: var(--color-texto);
-  border-bottom: 1px solid var(--color-borde-fuerte);
+  color: var(--color-acento);
+  border-bottom: 1px solid var(--color-acento);
 }
 
 /* ----- Tarjetas ----- */
@@ -329,35 +454,67 @@ select:focus {
 }
 
 .tarjeta:hover {
-  background-color: #fafaf9;
+  background-color: var(--color-superficie-alta);
 }
 
 .tarjeta--vista {
   opacity: 0.55;
 }
 
-.tarjeta__estado {
+/* ----- Póster de la tarjeta ----- */
+
+.tarjeta__poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  margin-bottom: 0.5rem;
+  background-color: var(--color-superficie-alta);
+  overflow: hidden;
   display: flex;
-  justify-content: flex-start;
-  order: 2;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarjeta__poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tarjeta__poster--error img {
+  display: none;
+}
+
+.tarjeta__poster-letra {
+  font-family: var(--fuente-texto);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-texto-tenue);
+}
+
+.tarjeta__poster .etiqueta {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background-color: rgba(11, 11, 13, 0.72);
+  backdrop-filter: blur(6px);
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
 }
 
 .etiqueta {
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
-  padding: 0;
-  border-radius: 0;
 }
 
 .etiqueta--pendiente {
-  background: transparent;
   color: var(--color-texto-tenue);
 }
 
 .etiqueta--vista {
-  background: transparent;
   color: var(--color-exito);
 }
 
@@ -367,14 +524,12 @@ select:focus {
   font-weight: 600;
   margin: 0;
   line-height: 1.35;
-  order: 0;
 }
 
 .tarjeta__meta {
   color: var(--color-texto-tenue);
   font-size: 0.8rem;
   margin: 0;
-  order: 1;
 }
 
 .tarjeta__acciones {
@@ -382,7 +537,6 @@ select:focus {
   flex-wrap: wrap;
   gap: 0.9rem;
   margin-top: 0.4rem;
-  order: 3;
 }
 
 /* ----- Pie ----- */
@@ -403,11 +557,11 @@ select:focus {
   bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  background-color: var(--color-texto);
-  border: none;
-  color: #ffffff;
-  padding: 0.75rem 1.25rem;
-  border-radius: 2px;
+  background-color: var(--color-superficie-alta);
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto);
+  padding: 0.75rem 1.35rem;
+  border-radius: 999px;
   font-size: 0.82rem;
   opacity: 0;
   pointer-events: none;
@@ -421,9 +575,148 @@ select:focus {
 }
 
 .toast--exito {
-  background-color: var(--color-exito);
+  border-color: var(--color-exito);
 }
 
 .toast--error {
-  background-color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+/* ----- Estrellas (formulario y visualización) ----- */
+
+.estrellas-form {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.estrella {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--color-borde);
+  cursor: pointer;
+  transition: color 0.1s ease, transform 0.1s ease;
+}
+
+.estrella:hover {
+  transform: scale(1.1);
+}
+
+.estrella--activa {
+  color: var(--color-acento);
+}
+
+.estrellas-form.campo--invalido {
+  outline: 1px solid var(--color-error);
+  outline-offset: 4px;
+}
+
+.tarjeta__estrellas {
+  margin: 0;
+  color: var(--color-acento);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+
+.tarjeta__comentario {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-texto-tenue);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* ----- Resumen: estadísticas ----- */
+
+.resumen:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 640px;
+  animation: aparecer 0.25s ease;
+}
+
+.estadisticas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 560px) {
+  .estadisticas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.estadistica {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.estadistica__valor {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-acento);
+}
+
+.estadistica__etiqueta {
+  font-size: 0.74rem;
+  color: var(--color-texto-tenue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ----- Resumen: rankings (Top 5 / recomendaciones) ----- */
+
+.lista-ranking {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fila-ranking {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 0.9rem;
+}
+
+.fila-ranking:last-child {
+  border-bottom: none;
+}
+
+.fila-ranking__puesto {
+  color: var(--color-texto-tenue);
+  font-size: 0.8rem;
+  width: 1.2rem;
+}
+
+.fila-ranking__titulo {
+  flex: 1;
+  font-weight: 500;
+}
+
+.fila-ranking__meta {
+  color: var(--color-texto-tenue);
+  font-weight: 400;
+}
+
+.fila-ranking__estrellas {
+  color: var(--color-acento);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.lista-vacia {
+  color: var(--color-texto-tenue);
+  font-size: 0.88rem;
+  list-style: none;
 }

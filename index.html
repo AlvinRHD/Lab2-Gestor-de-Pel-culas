@@ -12,86 +12,188 @@
   />
 </head>
 <body>
+  <header class="navbar">
+    <div class="navbar__marca">
+      <span class="navbar__icono" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2.5" y="6.5" width="19" height="13" rx="2" stroke="currentColor" stroke-width="1.5" />
+          <path d="M2.5 10.5H21.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M6 6.5L8.3 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M11 6.5L13.3 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M16 6.5L18.3 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="navbar__nombre">Gestor de Películas</span>
+    </div>
+
+    <nav class="navbar__tabs" role="tablist" aria-label="Secciones">
+      <button type="button" class="pestana activo" data-pestana="coleccion" role="tab" aria-selected="true">
+        Colección
+      </button>
+      <button type="button" class="pestana" data-pestana="resumen" role="tab" aria-selected="false">
+        Resumen
+      </button>
+    </nav>
+  </header>
+
   <div class="layout">
     <header class="encabezado">
-      <p class="encabezado__kicker">Laboratorio #2 - Proyecto 7</p>
+      <p class="encabezado__kicker">Parcial 2 -Proyecto 7 -Actualización del Laboratorio #2</p>
       <h1 class="encabezado__titulo">Gestor de Películas</h1>
       <p class="encabezado__subtitulo">
-        Registra tu colección personal, marca lo que ya viste y encuentra tu próxima película en segundos.
+        Registra tu colección personal, califícala, encuentra tu próxima película y revisa tus estadísticas.
       </p>
     </header>
 
-    <main class="contenido">
-      <section class="panel panel--formulario" aria-labelledby="titulo-formulario">
-        <h2 id="titulo-formulario" class="panel__titulo">Registrar película</h2>
-        <form id="form-pelicula" class="formulario" novalidate>
-          <input type="hidden" id="campo-id" />
+    <main>
+      <section id="panel-coleccion" class="contenido">
+        <section class="panel panel--formulario" aria-labelledby="titulo-formulario">
+          <h2 id="titulo-formulario" class="panel__titulo">Registrar película</h2>
+          <form id="form-pelicula" class="formulario" novalidate>
+            <input type="hidden" id="campo-id" />
+            <input type="hidden" id="campo-calificacion" />
 
-          <div class="campo-grupo">
-            <label for="campo-titulo">Título</label>
+            <div class="campo-grupo">
+              <label for="campo-titulo">Título</label>
+              <input
+                type="text"
+                id="campo-titulo"
+                name="titulo"
+                placeholder="Ej. Spider-Man: Un nuevo universo"
+                maxlength="120"
+                required
+              />
+              <span class="campo-error" data-error-para="titulo"></span>
+            </div>
+
+            <div class="campo-grupo campo-grupo--fila">
+              <div class="campo-grupo">
+                <label for="campo-anio">Año</label>
+                <input type="number" id="campo-anio" name="anio" placeholder="2018" min="1888" required />
+                <span class="campo-error" data-error-para="anio"></span>
+              </div>
+
+              <div class="campo-grupo">
+                <label for="campo-genero">Género</label>
+                <select id="campo-genero" name="genero" required></select>
+                <span class="campo-error" data-error-para="genero"></span>
+              </div>
+            </div>
+
+            <div class="campo-grupo">
+              <label>Calificación</label>
+              <div id="estrellas-form" class="estrellas-form" role="radiogroup" aria-label="Calificación de 1 a 5 estrellas"></div>
+              <span class="campo-error" data-error-para="calificacion"></span>
+            </div>
+
+            <div class="campo-grupo">
+              <label for="campo-poster">Imagen de portada (opcional)</label>
+              <input
+                type="url"
+                id="campo-poster"
+                name="posterUrl"
+                placeholder="https://ejemplo.com/poster.jpg"
+              />
+              <span class="campo-error" data-error-para="posterUrl"></span>
+            </div>
+
+            <div class="campo-grupo">
+              <label for="campo-comentario">Comentario (opcional)</label>
+              <textarea
+                id="campo-comentario"
+                name="comentario"
+                rows="2"
+                maxlength="240"
+                placeholder="¿Qué te pareció?"
+              ></textarea>
+              <span class="campo-error" data-error-para="comentario"></span>
+            </div>
+
+            <div class="formulario__acciones">
+              <button type="submit" id="btn-submit" class="btn btn--primario">Registrar película</button>
+              <button type="button" id="btn-cancelar" class="btn btn--texto" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel panel--coleccion" aria-labelledby="titulo-coleccion">
+          <div class="coleccion__encabezado">
+            <h2 id="titulo-coleccion" class="panel__titulo">Tu colección</h2>
+            <p id="contador-resultados" class="coleccion__contador"></p>
+          </div>
+
+          <div class="filtros">
             <input
-              type="text"
-              id="campo-titulo"
-              name="titulo"
-              placeholder="Ej. Spider-Man: Un nuevo universo"
-              maxlength="120"
-              required
+              type="search"
+              id="campo-busqueda"
+              class="filtros__busqueda"
+              placeholder="Buscar por título o género…"
+              aria-label="Buscar películas"
             />
-            <span class="campo-error" data-error-para="titulo"></span>
-          </div>
 
-          <div class="campo-grupo campo-grupo--fila">
-            <div class="campo-grupo">
-              <label for="campo-anio">Año</label>
-              <input type="number" id="campo-anio" name="anio" placeholder="2018" min="1888" required />
-              <span class="campo-error" data-error-para="anio"></span>
+            <select id="filtro-genero" class="filtros__select" aria-label="Filtrar por género"></select>
+            <select id="filtro-anio" class="filtros__select" aria-label="Filtrar por año">
+              <option value="">Todos los años</option>
+            </select>
+            <select id="ordenar-por" class="filtros__select" aria-label="Ordenar por">
+              <option value="ninguno">Sin ordenar</option>
+              <option value="titulo">Título (A-Z)</option>
+              <option value="anio">Año (más reciente)</option>
+              <option value="calificacion">Calificación (mayor a menor)</option>
+            </select>
+
+            <div class="filtros__estado" role="group" aria-label="Filtrar por estado">
+              <button type="button" class="chip activo" data-filtro-estado="todas">Todas</button>
+              <button type="button" class="chip" data-filtro-estado="pendientes">Pendientes</button>
+              <button type="button" class="chip" data-filtro-estado="vistas">Vistas</button>
             </div>
-
-            <div class="campo-grupo">
-              <label for="campo-genero">Género</label>
-              <select id="campo-genero" name="genero" required></select>
-              <span class="campo-error" data-error-para="genero"></span>
-            </div>
           </div>
 
-          <div class="formulario__acciones">
-            <button type="submit" id="btn-submit" class="btn btn--primario">Registrar película</button>
-            <button type="button" id="btn-cancelar" class="btn btn--texto" hidden>Cancelar edición</button>
-          </div>
-        </form>
+          <p id="mensaje-vacio" class="mensaje-vacio" hidden></p>
+          <div id="contenedor-tarjetas" class="tarjetas"></div>
+        </section>
       </section>
 
-      <section class="panel panel--coleccion" aria-labelledby="titulo-coleccion">
-        <div class="coleccion__encabezado">
-          <h2 id="titulo-coleccion" class="panel__titulo">Tu colección</h2>
-          <p id="contador-resultados" class="coleccion__contador"></p>
-        </div>
-
-        <div class="filtros">
-          <input
-            type="search"
-            id="campo-busqueda"
-            class="filtros__busqueda"
-            placeholder="Buscar por título o género…"
-            aria-label="Buscar películas"
-          />
-
-          <select id="filtro-genero" class="filtros__select" aria-label="Filtrar por género"></select>
-
-          <div class="filtros__estado" role="group" aria-label="Filtrar por estado">
-            <button type="button" class="chip activo" data-filtro-estado="todas">Todas</button>
-            <button type="button" class="chip" data-filtro-estado="pendientes">Pendientes</button>
-            <button type="button" class="chip" data-filtro-estado="vistas">Vistas</button>
+      <section id="panel-resumen" class="resumen" hidden>
+        <section class="panel">
+          <h2 class="panel__titulo">Estadísticas</h2>
+          <div class="estadisticas">
+            <div class="estadistica">
+              <span id="stat-total" class="estadistica__valor">0</span>
+              <span class="estadistica__etiqueta">Total</span>
+            </div>
+            <div class="estadistica">
+              <span id="stat-vistas" class="estadistica__valor">0</span>
+              <span class="estadistica__etiqueta">Vistas</span>
+            </div>
+            <div class="estadistica">
+              <span id="stat-pendientes" class="estadistica__valor">0</span>
+              <span class="estadistica__etiqueta">Pendientes</span>
+            </div>
+            <div class="estadistica">
+              <span id="stat-promedio" class="estadistica__valor">-</span>
+              <span class="estadistica__etiqueta">Promedio</span>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <p id="mensaje-vacio" class="mensaje-vacio" hidden></p>
-        <div id="contenedor-tarjetas" class="tarjetas"></div>
+        <section class="panel">
+          <h2 class="panel__titulo">Top 5 mejor calificadas</h2>
+          <ol id="lista-top5" class="lista-ranking"></ol>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel__titulo">Recomendadas para ver</h2>
+          <p id="mensaje-recomendaciones" class="mensaje-vacio" hidden>
+            Califica con 4 o 5 estrellas alguna película pendiente para verla aquí.
+          </p>
+          <ul id="lista-recomendaciones" class="lista-ranking"></ul>
+        </section>
       </section>
     </main>
 
     <footer class="pie">
-      <p>UNIVO · Arquitectura MVC con TypeScript - Persistencia en localStorage</p>
+      <p>UNIVO -Arquitectura MVC con TypeScript -Persistencia en localStorage</p>
     </footer>
   </div>
 
