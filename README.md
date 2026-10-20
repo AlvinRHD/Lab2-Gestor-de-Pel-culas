@@ -2,6 +2,10 @@
 
 Aplicación web para administrar una colección personal de películas, construida con **TypeScript** siguiendo una **arquitectura MVC** y persistencia en `localStorage`.
 
+# OJO
+Subi el proyecto a netlify por si las moscas no funciona en local: [click aqui](https://moviegestion.netlify.app/)
+(De igual forma si se quiere probar en local estan acá las indicaciones)
+
 ### Base (Laboratorio #2)
 - Registrar, editar y eliminar (con confirmación) películas: título, año y género.
 - Marcar una película como vista o pendiente.
